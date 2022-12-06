@@ -182,7 +182,7 @@ int main(void)
 			  HAL_ADC_Start(&hadc1);
 			  ADC_value = HAL_ADC_GetValue (& hadc1 );
 			  HAL_UART_Transmit (& huart2 , ( void *) str , sprintf (str , " !ADC=%d#\n", ADC_value ), 1000);
-			  setTimer1(500);
+			  setTimer1(1000);
 		  }
 		  switch (buffer[index_buffer]) {
 			  case 33:
@@ -223,11 +223,11 @@ int main(void)
 	  if(timer2_flag == 1)
 	  {
 		  HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
-		  setTimer2(500);
+		  setTimer2(1000);
 	  }
   }
-  setTimer1(500);
-  setTimer2(500);
+  setTimer1(1000);
+  setTimer2(1000);
   while (1)
   {
 	  if(buffer_flag == 1){
