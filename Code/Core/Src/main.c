@@ -71,20 +71,11 @@ uint8_t buffer[MAX_BUFFER_SIZE];
 uint8_t index_buffer = 0;
 uint8_t buffer_flag = 0;
 uint32_t ADC_value = 0;
+int flag = 0;
 char str[50];
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == USART2){
-//		HAL_UART_Transmit(&huart2, &temp, 1, 50);
-//		if(temp != 13)
-//		{
-//			buffer[index_buffer++] = temp;
-//		}
-//		else if(temp == 13)
-//		{
-//			buffer_flag = 1;
-//			index_buffer = 0;
-//		}
 		buffer[index_buffer] = temp;
 		buffer_flag = 1;
 		if(index_buffer == 30) index_buffer = 0;
@@ -132,46 +123,78 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   void command_parser_fsm()
   {
-  	HAL_UART_Transmit (& huart2 , buffer , sizeof(buffer),3000);
+	  flag = 1;
+	  HAL_UART_Transmit (& huart2 , buffer , sizeof(buffer),3000);
   }
 
   void uart_communiation_fsm()
   {
 	  switch (buffer[index_buffer]) {
 		case 33:
-			if(check_command1 == 0)
+			if(check_command1 == 0 && flag == 1)
 			{
 				check_command1++;
+				flag = 0;
+			}
+			if(check_command1 != 0 && flag == 1)
+			{
+				check_command1 = 0;
+				flag = 0;
 			}
 			break;
 		case 82:
-			if(check_command1 == 1)
+			if(check_command1 == 1 && flag == 1)
 			{
 				check_command1++;
+				flag = 0;
+			}
+			if(check_command1 != 1 && flag == 1)
+			{
+				check_command1 = 0;
+				flag = 0;
 			}
 			break;
 		case 83:
-			if(check_command1 == 2)
+			if(check_command1 == 2 && flag == 1)
 			{
 				check_command1++;
+				flag = 0;
+			}
+			if(check_command1 != 2 && flag == 1)
+			{
+				check_command1 = 0;
+				flag = 0;
 			}
 			break;
 		case 84:
-			if(check_command1 == 3)
+			if(check_command1 == 3 && flag == 1)
 			{
 				check_command1++;
+				flag = 0;
+			}
+			if(check_command1 != 3 && flag == 1)
+			{
+				check_command1 = 0;
+				flag = 0;
 			}
 			break;
 		case 35:
-			if(check_command1 == 4)
+			if(check_command1 == 4 && flag == 1)
 			{
 				check_command1++;
+				flag = 0;
+			}
+			if(check_command1 != 4 && flag == 1)
+			{
+				check_command1 = 0;
+				flag = 0;
 			}
 			break;
 		default:
 			if(check_command1 != 5)
 			{
 				check_command1 = 0;
+				flag = 0;
 			}
 			break;
 	  }
@@ -181,32 +204,57 @@ int main(void)
 		  {
 			  HAL_ADC_Start(&hadc1);
 			  ADC_value = HAL_ADC_GetValue (& hadc1 );
+			  HAL_ADC_Stop(&hadc1);
 			  HAL_UART_Transmit (& huart2 , ( void *) str , sprintf (str , " !ADC=%d#\n", ADC_value ), 1000);
 			  setTimer1(1000);
 		  }
 		  switch (buffer[index_buffer]) {
 			  case 33:
-					if(check_command2 == 0)
+					if(check_command2 == 0 && flag == 1)
 					{
 						check_command2++;
+						flag = 0;
+					}
+					if(check_command2 != 0 && flag == 1)
+					{
+						check_command2 = 0;
+						flag = 0;
 					}
 					break;
 			  case 79:
-				  	if(check_command2 == 1)
+				  	if(check_command2 == 1 && flag == 1)
 					{
 						check_command2++;
+						flag = 0;
+					}
+				  	if(check_command2 != 1 && flag == 1)
+					{
+						check_command2 = 0;
+						flag = 0;
 					}
 					break;
 			  case 75:
-					if(check_command2 == 2)
+					if(check_command2 == 2  && flag == 1)
 					{
 						check_command2++;
+						flag = 0;
+					}
+					if(check_command2 != 2 && flag == 1)
+					{
+						check_command2 = 0;
+						flag = 0;
 					}
 					break;
 			  case 35:
-					if(check_command2 == 3)
+					if(check_command2 == 3  && flag == 1)
 					{
 						check_command2++;
+						flag = 0;
+					}
+					if(check_command2 != 3 && flag == 1)
+					{
+						check_command2 = 0;
+						flag = 0;
 					}
 					break;
 			default:
